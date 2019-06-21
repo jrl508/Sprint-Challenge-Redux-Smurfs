@@ -16,11 +16,6 @@ import{
  */
 const initialState = {
    smurfs: [],
-   newSmurf:{
-     name:'',
-     age:'',
-     height:''
-   },
    fetchingSmurfs: false,
    addingSmurf: false,
    updatingSmurf: false,
@@ -65,11 +60,10 @@ function reducer(state = initialState, action){
           error:''
           };
         case ADD_SMURF_SUCCESS:
-          const newSmurf = {name: action.payload, age: action.payload, height:action.payload}
           return{
             ...state,
             addingSmurfs:false,
-            smurfs: [...state.smurfs, newSmurf],
+            smurfs: action.payload,
             error:''
           };
         case ADD_SMURF_FAIL:

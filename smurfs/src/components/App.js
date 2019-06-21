@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import { connect } from 'react-redux';
-import { getSmurfs } from "../actions"
+import { getSmurfs,addSmurf } from "../actions"
 /*
  to wire this component up you're going to need a few things.
  I'll let you do this part on your own. 
@@ -9,20 +9,35 @@ import { getSmurfs } from "../actions"
  `How do I ensure that my component links the state to props?`
  */
 class App extends Component {
-
+  state = {
+    smurf: {
+    name:'',
+    age:'',
+    height:''
+    }
+  }
   handleChanges = e => {
-    this.setState({ newMember: e.target.value });
-  };
-
-  addMember = e => {
     e.preventDefault();
-    this.props.addSmurf(this.props.newSmurf);
+    e.persist();
+    this.setState( prevState => (
+      {
+        smurf:{
+          ...prevState.smurf,
+          [e.target.name]: e.target.value
+        } 
+  }));
+
+}
+
+  addSmurf = (e,smurf) => {
+    e.preventDefault();
+    this.props.addSmurf(smurf);
   };
 
   fetchSmurfs = e =>{
     e.preventDefault();
     this.props.getSmurfs();
-  }
+  };
 
   
   render() {
@@ -34,34 +49,41 @@ class App extends Component {
 
         <div>
           {this.props.smurfs.map(smurf => (
-            <h4 key ={smurf.id}>{smurf.name}</h4>
+            <div key ={smurf.id}>
+              <p>{smurf.name}</p>
+              <p>{smurf.age}</p>
+              <p>{smurf.height}</p>
+            </div>
           ))}
         </div>
         
-        <form>
+        <form onSubmit={e => this.addSmurf(e, this.state.smurf)}>
           <input 
-          type="text" 
-          value={this.props.newSmurf.name}
+          type="text"
+          name="name" 
+          value={this.state.smurf.name}
           onChange= {this.handleChanges}
           placeholder="Smurf Name"
           
           />
           <input 
-          type="text" 
-          value={this.props.newSmurf.age}
+          type="text"
+          name="age" 
+          value={this.state.smurf.age}
           onChange= {this.handleChanges}
           placeholder="Smurf Age"
           
           />
           <input 
-          type="text" 
-          value={this.props.newSmurf.height}
+          type="text"
+          name="height" 
+          value={this.state.smurf.height}
           onChange= {this.handleChanges}
           placeholder="Smurf Height"
           
           />
+          <button type="submit">Add Smurf!</button>
         </form>
-        <button onClick={this.addMember}>Add Smurf!</button>
         {this.props.error && <p className="error">{this.props.error}</p>}
       </div>
     );
