@@ -39,12 +39,14 @@ function reducer(state = initialState, action){
       case FETCH_SMURF_SUCCESS:
         return{
           ...state,
+          fetchingSmurfs:false,
           smurfs: action.payload,
           error:''
         };
       case FETCH_SMURF_FAIL:
         return{
           ...state,
+          fetchingSmurfs:false,
           error: action.payload
         };
 
